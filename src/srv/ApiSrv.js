@@ -149,7 +149,7 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
-function errorHandler (err, req, res) {
+function errorHandler (err, req, res,next) {
     res.status(err.status).send({ error: err.message })
 }
 
