@@ -1,13 +1,22 @@
 {
   "name": "backend-scout24",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "challenge scout24",
   "scripts": {
-    "start": "node ./src/srv/ApiServer",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./src/srv/ApiSrv"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "an",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.2",
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
+  }
 }
