@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 const { Router } = require('express');
 const Test = require('../services/service-test');
+const MvpService = require('../services/service-mvp')
+
 
 /**
  * Routing:
@@ -39,7 +41,16 @@ module.exports = class APIRouter extends Router {
              */
         );
 
+        this.post(
+            '/mvp',
+            MvpService.Insert
+            
+        );
 
+        this.get(
+            '/mvp',
+            MvpService.GetAll
+        );
     }
 
     static defaultOptions() {
