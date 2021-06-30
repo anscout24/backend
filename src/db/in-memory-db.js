@@ -28,7 +28,7 @@ const SchemaFilter = (obj) => {
         listingId,
         realEstateType,
         street,
-        houseNr,
+        houseNumber,
         postCode,
         city,
         livingArea,
@@ -42,7 +42,7 @@ const SchemaFilter = (obj) => {
         listingId,
         realEstateType,
         street,
-        houseNr,
+        houseNumber,
         postCode,
         city,
         livingArea,
@@ -51,7 +51,7 @@ const SchemaFilter = (obj) => {
         salesPrice,
         imgUrl
     }
-}
+};
 
 const isArray = (obj) => {
     return Array.isArray(obj);
