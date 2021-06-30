@@ -27,7 +27,7 @@ module.exports = class MvpService {
 
             // execute only if no data is stored
             const result = await ImportCSV();
-            InsertListing(result);
+            await InsertListing(result);
 
             // redundant but it makes sure that data is stored
             respdata = await FindAll();

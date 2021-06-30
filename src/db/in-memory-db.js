@@ -2,6 +2,7 @@
 var loki = require('lokijs');
 // create virt db
 var db = new loki('mvp.db');
+const {FetchFromGoogle} = require('../db/utils/get-geocode');
 
 // Add a collection to the database
 var listings = db.addCollection('listings');
@@ -55,30 +56,39 @@ const SchemaFilter = (obj) => {
 
 const isArray = (obj) => {
     return Array.isArray(obj);
+};
+
+async function exec (value) {
+    /**
+     * Request for geodata is made on each database write but after
+     * filtering the schema. This ensures that no entry is made in
+     * the database without lng/lat data.
+     *
+     * @type {{livingArea, rentalPrice, imgUrl, siteArea, city, street, salesPrice, houseNumber, postCode, listingId, realEstateType}}
+     */
+    const filData = SchemaFilter(value);
+    const resp = await FetchFromGoogle(filData);
+    listings.insert(resp)
 }
 
 // not yet unique listingId
 const InsertListing = (obj) => {
     
     // Ensuring that multiple items can also be added
-    if (isArray(obj) ){
-        obj.forEach(function (value,i) {
-            const filteredData = SchemaFilter(value)
-            listings.insert(filteredData)
-        });
+    if (isArray(obj)) {
+        Promise.all(obj.map(value => exec(value)))
     } else {
-        const filteredData = SchemaFilter(obj)
-        listings.insert(filteredData)
+        exec(obj)
     }
 
-}
+};
 
 const FindAll = () => {
     return listings.find({})
-}
+};
 
 const FindOneByType = (type) => {
     return listings.findOne({'realEstateType': type})
-}
+};
 
 module.exports = {InsertListing, FindAll};
