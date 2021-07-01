@@ -51,6 +51,12 @@ module.exports = class APIRouter extends Router {
             '/mvp',
             MvpService.GetAll
         );
+
+
+        this.get(
+            '/mvp/filter',
+            MvpService.Filter
+        );
     }
 
     static defaultOptions() {

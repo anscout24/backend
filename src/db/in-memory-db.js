@@ -25,7 +25,7 @@ var listings = db.addCollection('listings');
 
 // Ensuring a harmonized DB structure light solution
 const SchemaFilter = (obj) => {
-    const  {
+    var  {
         realEstateType,
         street,
         houseNumber,
@@ -39,6 +39,12 @@ const SchemaFilter = (obj) => {
     } = obj;
 
     const listingId = new Date().getTime(); // unique id for list items
+    rentalPrice = parseInt(rentalPrice)||0;
+    salesPrice = parseInt(salesPrice)||0;
+    livingArea = parseInt(livingArea)||0;
+    siteArea = parseInt(siteArea)||0;
+
+
     return {
         listingId,
         realEstateType,
@@ -73,9 +79,36 @@ const FindAll = () => {
     return listings.find({})
 };
 
-const FindOneByType = (type) => {
-    return listings.findOne({'realEstateType': type})
+
+const FindFiltered = (req, cb) => {
+
+    let options = [];
+
+    // set default params
+    const default_params = {
+        realEstateType: "",
+        rentalPriceMin: 0,
+        rentalPriceMax: 999999999,
+        salesPriceMin: 0,
+        salesPriceMax: 999999,
+    };
+
+    // update params
+    const params = {...default_params,...req.query};
+
+    if(params.realEstateType !== ""){ options.push({realEstateType: params.realEstateType})}
+
+    options.push({rentalPrice: {"$between": [parseInt(params.rentalPriceMin), parseInt(params.rentalPriceMax)]}});
+    options.push({salesPrice: {"$between": [parseInt(params.salesPriceMin), parseInt(params.salesPriceMax)]}});
+
+
+    let query = {"$and": options};
+
+    return  listings.find(query);
+
+
 };
+
 
 // init db
 async function InitDB (){
@@ -85,4 +118,4 @@ async function InitDB (){
 // execute on load module
 InitDB();
 
-module.exports = {execInsert, FindAll};
+module.exports = {execInsert, FindAll, FindFiltered};

@@ -1,6 +1,4 @@
-// import in-memory db
-
-const { execInsert, FindAll } = require('../db/in-memory-db');
+const { execInsert, FindAll, FindFiltered} = require('../db/in-memory-db');
 const { ImportCSV } = require('../db/importCSV');
 
 module.exports = class MvpService {
@@ -14,7 +12,7 @@ module.exports = class MvpService {
             );
 
         } else {
-            resp.status(406).send({message: 'missmatch type, req an obj'});
+            resp.status(400).send({message: 'missmatch type, req an obj'});
         }
     };
 
@@ -31,13 +29,24 @@ module.exports = class MvpService {
             const result = await ImportCSV();
             InsertListing(result);
 
-            resp.status(406).send(
+            resp.status(400).send(
                 {message: ' no data in db, import is initialised please refresh page'}
             );
 
         }
     }
 
+    static async Filter(req, resp) {
 
+        try {
+            let respdata = await FindFiltered(req);
+            resp.status(200).send({ data: respdata });
+
+        } catch {
+            resp.status(400).send(
+                {message: ' no data based on filter params'}
+            );
+        }
+    }
 }
 
