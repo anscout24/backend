@@ -3,7 +3,7 @@ var loki = require('lokijs');
 // create virt db
 var db = new loki('mvp.db');
 const {FetchFromGoogle} = require('../db/utils/get-geocode');
-
+const { ImportCSV } = require('../db/importCSV');
 // Add a collection to the database
 var listings = db.addCollection('listings');
 
@@ -26,39 +26,35 @@ var listings = db.addCollection('listings');
 // Ensuring a harmonized DB structure light solution
 const SchemaFilter = (obj) => {
     const  {
-        listingId,
         realEstateType,
         street,
         houseNumber,
-        postCode,
+        postcode,
         city,
         livingArea,
         siteArea,
         rentalPrice,
         salesPrice,
-        imgUrl
+        imageURL
     } = obj;
 
+    const listingId = new Date().getTime(); // unique id for list items
     return {
         listingId,
         realEstateType,
         street,
         houseNumber,
-        postCode,
+        postcode,
         city,
         livingArea,
         siteArea,
         rentalPrice,
         salesPrice,
-        imgUrl
+        imageURL
     }
 };
 
-const isArray = (obj) => {
-    return Array.isArray(obj);
-};
-
-async function exec (value) {
+async function execInsert (value) {
     /**
      * Request for geodata is made on each database write but after
      * filtering the schema. This ensures that no entry is made in
@@ -68,20 +64,10 @@ async function exec (value) {
      */
     const filData = SchemaFilter(value);
     const resp = await FetchFromGoogle(filData);
-    listings.insert(resp)
+    listings.insert(resp);
+
 }
 
-// not yet unique listingId
-const InsertListing = (obj) => {
-    
-    // Ensuring that multiple items can also be added
-    if (isArray(obj)) {
-        Promise.all(obj.map(value => exec(value)))
-    } else {
-        exec(obj)
-    }
-
-};
 
 const FindAll = () => {
     return listings.find({})
@@ -91,4 +77,12 @@ const FindOneByType = (type) => {
     return listings.findOne({'realEstateType': type})
 };
 
-module.exports = {InsertListing, FindAll};
+// init db
+async function InitDB (){
+    const result = await ImportCSV();
+    result.map(value => execInsert(value))
+}
+// execute on load module
+InitDB();
+
+module.exports = {execInsert, FindAll};

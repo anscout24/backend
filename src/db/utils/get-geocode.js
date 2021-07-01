@@ -15,7 +15,10 @@ module.exports = class GetGeodData {
         // String so that google can achieve maximum hit accuracy
         let searchstring = ''+req.city+','+req.postCode+','+req.street+' '+req.houseNumber;
 
-        return {...req, ...geocoder.geocode(searchstring)[0]}
+        const res = await geocoder.geocode(searchstring);
+
+        return  {...req, ...res[0]};
+
 
     }
 
