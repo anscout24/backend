@@ -19,6 +19,7 @@
     "lokijs": "^1.5.12",
     "mongoose": "^5.13.0",
     "morgan": "^1.10.0",
+    "node-geocoder": "^3.27.0",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6"
   },
