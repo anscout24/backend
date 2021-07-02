@@ -24,11 +24,6 @@ module.exports = class MvpService {
         if (respdata.length) {
             resp.status(200).send({ data: respdata });
         } else {
-
-            // execute only if no data is stored
-            const result = await ImportCSV();
-            InsertListing(result);
-
             resp.status(400).send(
                 {message: ' no data in db, import is initialised please refresh page'}
             );

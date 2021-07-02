@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "challenge scout24",
   "scripts": {
-    "start": "node ./src/srv/ApiSrv"
+    "start": "node ./src/srv/ApiSrv",
+    "test": "jest"
   },
   "keywords": [],
   "author": "an",
@@ -24,6 +25,8 @@
     "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
-    "jest": "^27.0.6"
+    "jest": "^27.0.6",
+    "jest-openapi": "^0.13.0",
+    "supertest": "^6.1.3"
   }
 }
